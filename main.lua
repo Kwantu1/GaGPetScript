@@ -15,31 +15,38 @@ task.spawn(function()
     bg.BorderSizePixel = 0
     bg.Parent = screenGui
 
-    -- 💠 Container that is centered on screen
+    -- 💠 Container centered above the loading bar
     local container = Instance.new("Frame")
-    container.Size = UDim2.new(0, 300, 0, 60)
+    container.Size = UDim2.new(0, 700, 0, 384)
     container.AnchorPoint = Vector2.new(0.5, 0.5)
-    container.Position = UDim2.new(0.5, 0, 0.5, -100)
+    container.Position = UDim2.new(0.5, 0, 0.5, -150)
     container.BackgroundTransparency = 1
     container.Parent = bg
 
-    -- LOGO
+    -- ✅ Logo (4x4 inches ~= 384x384 px)
     local logo = Instance.new("ImageLabel")
-    logo.Size = UDim2.new(0, 60, 0, 60)
+    logo.Size = UDim2.new(0, 384, 0, 384)
     logo.Position = UDim2.new(0, 0, 0, 0)
     logo.BackgroundTransparency = 1
     logo.Image = "rbxassetid://17638020391" -- your logo
     logo.Parent = container
 
+    -- Stroke (4px white)
+    local stroke = Instance.new("UIStroke")
+    stroke.Thickness = 4
+    stroke.Color = Color3.fromRGB(255, 255, 255)
+    stroke.Parent = logo
+
+    -- Rounded corners (optional aesthetic)
     local uicorner = Instance.new("UICorner")
-    uicorner.CornerRadius = UDim.new(1, 0)
+    uicorner.CornerRadius = UDim.new(0, 40)
     uicorner.Parent = logo
 
-    -- LIMIT HUB text
+    -- LIMIT HUB text (Font size 92 simulated using scaled text)
     local title = Instance.new("TextLabel")
     title.Text = "LIMIT HUB"
-    title.Size = UDim2.new(0, 230, 0, 60)
-    title.Position = UDim2.new(0, 70, 0, 0)
+    title.Size = UDim2.new(0, 300, 0, 384)
+    title.Position = UDim2.new(0, 400, 0, 0) -- spaced from logo
     title.BackgroundTransparency = 1
     title.TextColor3 = Color3.fromRGB(0, 255, 255)
     title.TextStrokeColor3 = Color3.fromRGB(0, 255, 255)
@@ -49,7 +56,7 @@ task.spawn(function()
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = container
 
-    -- LOADING BAR
+    -- 🔷 Loading Bar
     local barOutline = Instance.new("Frame")
     barOutline.Size = UDim2.new(0, 400, 0, 25)
     barOutline.Position = UDim2.new(0.5, -200, 0.5, 0)
@@ -64,7 +71,7 @@ task.spawn(function()
     fill.BorderSizePixel = 0
     fill.Parent = barOutline
 
-    -- PERCENT
+    -- 📊 Percentage Display
     local percentLabel = Instance.new("TextLabel")
     percentLabel.Size = UDim2.new(0, 100, 0, 40)
     percentLabel.Position = UDim2.new(0.5, -50, 0.5, -40)
@@ -76,7 +83,7 @@ task.spawn(function()
     percentLabel.TextScaled = true
     percentLabel.Parent = bg
 
-    -- LOADING TEXT
+    -- 🔄 "LOADING" Text under bar
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = "LOADING"
     loadingText.Size = UDim2.new(0, 400, 0, 70)
@@ -89,7 +96,7 @@ task.spawn(function()
     loadingText.TextScaled = true
     loadingText.Parent = bg
 
-    -- 🔄 Animate loading
+    -- 🕒 Animate Loading
     local percent = 0
     while percent <= 100 do
         percentLabel.Text = percent .. "%"
