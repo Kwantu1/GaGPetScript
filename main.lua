@@ -3,104 +3,97 @@ task.spawn(function()
     local player = Players.LocalPlayer
     local PlayerGui = player:WaitForChild("PlayerGui")
 
-    -- GUI Setup
+    -- Screen GUI
     local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "LimitHubLoader"
-    screenGui.ResetOnSpawn = false
+    screenGui.Name = "LimitHubLoading"
     screenGui.IgnoreGuiInset = true
+    screenGui.ResetOnSpawn = false
     screenGui.Parent = PlayerGui
 
-    -- Background
-    local bgFrame = Instance.new("Frame")
-    bgFrame.Size = UDim2.new(1, 0, 1, 0)
-    bgFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-    bgFrame.BorderSizePixel = 0
-    bgFrame.Parent = screenGui
-
-    -- Loading Bar Outline
-    local barOutline = Instance.new("Frame")
-    barOutline.Size = UDim2.new(0, 30, 0, 300)
-    barOutline.Position = UDim2.new(0.45, 0, 0.2, 0)
-    barOutline.BorderColor3 = Color3.fromRGB(0, 255, 255)
-    barOutline.BorderSizePixel = 2
-    barOutline.BackgroundTransparency = 1
-    barOutline.Parent = bgFrame
-
-    -- Progress Fill
-    local progressFill = Instance.new("Frame")
-    progressFill.Size = UDim2.new(1, 0, 0, 0)
-    progressFill.Position = UDim2.new(0, 0, 1, 0)
-    progressFill.AnchorPoint = Vector2.new(0, 1)
-    progressFill.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
-    progressFill.ClipsDescendants = true
-    progressFill.Parent = barOutline
-
-    -- Diagonal Fill Pattern
-    local pattern = Instance.new("ImageLabel")
-    pattern.Size = UDim2.new(1, 0, 1, 0)
-    pattern.BackgroundTransparency = 1
-    pattern.Image = "rbxassetid://6726731762" -- diagonal stripes
-    pattern.ImageTransparency = 0.2
-    pattern.Parent = progressFill
-
-    -- Loading Text
-    local loadingLabel = Instance.new("TextLabel")
-    loadingLabel.Size = UDim2.new(0, 200, 0, 50)
-    loadingLabel.Position = UDim2.new(0.45, -210, 0.45, 0)
-    loadingLabel.Text = "LOADING"
-    loadingLabel.TextColor3 = Color3.fromRGB(200, 255, 255)
-    loadingLabel.TextScaled = true
-    loadingLabel.Font = Enum.Font.SciFi
-    loadingLabel.BackgroundTransparency = 1
-    loadingLabel.TextStrokeTransparency = 0.4
-    loadingLabel.Parent = bgFrame
-
-    -- Percent Label
-    local percentLabel = Instance.new("TextLabel")
-    percentLabel.Size = UDim2.new(0, 100, 0, 50)
-    percentLabel.Position = UDim2.new(0.45, 40, 0.43, 0)
-    percentLabel.Text = "0%"
-    percentLabel.TextColor3 = Color3.new(1, 1, 1)
-    percentLabel.TextStrokeTransparency = 0.2
-    percentLabel.TextScaled = true
-    percentLabel.Font = Enum.Font.SciFi
-    percentLabel.BackgroundTransparency = 1
-    percentLabel.Parent = bgFrame
-
-    -- LIMIT HUB Title
-    local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(0, 300, 0, 100)
-    title.Position = UDim2.new(0.58, 0, 0.4, 0)
-    title.Text = "LIMIT HUB"
-    title.TextColor3 = Color3.fromRGB(80, 255, 255)
-    title.TextStrokeTransparency = 0.3
-    title.TextScaled = true
-    title.Font = Enum.Font.SciFi
-    title.BackgroundTransparency = 1
-    title.Parent = bgFrame
+    -- Background Frame
+    local bg = Instance.new("Frame")
+    bg.Size = UDim2.new(1, 0, 1, 0)
+    bg.BackgroundColor3 = Color3.new(0, 0, 0)
+    bg.BorderSizePixel = 0
+    bg.Parent = screenGui
 
     -- Logo Image
     local logo = Instance.new("ImageLabel")
     logo.Size = UDim2.new(0, 60, 0, 60)
-    logo.Position = UDim2.new(0.56, 0, 0.3, 0)
+    logo.Position = UDim2.new(0.5, -180, 0.35, -80)
     logo.BackgroundTransparency = 1
-    logo.Image = "rbxassetid://6034304892" -- replace with custom if you want
-    logo.Parent = bgFrame
+    logo.Image = "rbxassetid://17638020391" -- uploaded version of your logo
+    logo.Parent = bg
 
     local uicorner = Instance.new("UICorner")
     uicorner.CornerRadius = UDim.new(1, 0)
     uicorner.Parent = logo
 
-    -- Animate loading
+    -- LIMIT HUB title (next to logo)
+    local title = Instance.new("TextLabel")
+    title.Text = "LIMIT HUB"
+    title.Size = UDim2.new(0, 400, 0, 100)
+    title.Position = UDim2.new(0.5, -110, 0.35, -85)
+    title.BackgroundTransparency = 1
+    title.TextColor3 = Color3.fromRGB(0, 255, 255)
+    title.TextStrokeColor3 = Color3.fromRGB(0, 255, 255)
+    title.TextStrokeTransparency = 0.2
+    title.Font = Enum.Font.Fantasy -- substitute for Barbara
+    title.TextScaled = true
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = bg
+
+    -- Loading bar container
+    local barOutline = Instance.new("Frame")
+    barOutline.Size = UDim2.new(0, 400, 0, 25)
+    barOutline.Position = UDim2.new(0.5, -200, 0.5, 0)
+    barOutline.BackgroundColor3 = Color3.new(0, 0, 0)
+    barOutline.BorderColor3 = Color3.fromRGB(0, 255, 255)
+    barOutline.BorderSizePixel = 2
+    barOutline.Parent = bg
+
+    -- Fill inside bar
+    local fill = Instance.new("Frame")
+    fill.Size = UDim2.new(0, 0, 1, 0)
+    fill.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+    fill.BorderSizePixel = 0
+    fill.Parent = barOutline
+
+    -- LOADING label (bottom)
+    local loadingText = Instance.new("TextLabel")
+    loadingText.Text = "LOADING"
+    loadingText.Size = UDim2.new(0, 400, 0, 70)
+    loadingText.Position = UDim2.new(0.5, -200, 0.5, 40)
+    loadingText.BackgroundTransparency = 1
+    loadingText.TextColor3 = Color3.fromRGB(0, 255, 255)
+    loadingText.TextStrokeColor3 = Color3.fromRGB(0, 255, 255)
+    loadingText.TextStrokeTransparency = 0.2
+    loadingText.Font = Enum.Font.SciFi
+    loadingText.TextScaled = true
+    loadingText.Parent = bg
+
+    -- Percent display (above bar)
+    local percentLabel = Instance.new("TextLabel")
+    percentLabel.Size = UDim2.new(0, 100, 0, 40)
+    percentLabel.Position = UDim2.new(0.5, -50, 0.5, -40)
+    percentLabel.BackgroundTransparency = 1
+    percentLabel.Text = "0%"
+    percentLabel.TextColor3 = Color3.new(1, 1, 1)
+    percentLabel.TextStrokeTransparency = 0.3
+    percentLabel.Font = Enum.Font.Code
+    percentLabel.TextScaled = true
+    percentLabel.Parent = bg
+
+    -- Animate loading bar (5% every 3 seconds)
     local percent = 0
     while percent <= 100 do
         percentLabel.Text = percent .. "%"
-        progressFill.Size = UDim2.new(1, 0, percent / 100, 0)
+        fill.Size = UDim2.new(percent / 100, 0, 1, 0)
         percent += 5
-        task.wait(0.4)
+        task.wait(3)
     end
 
-    -- Auto remove GUI after loading
+    -- Final wait, then destroy GUI
     task.wait(1)
     screenGui:Destroy()
 end)
