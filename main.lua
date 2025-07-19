@@ -3,60 +3,36 @@ task.spawn(function()
     local player = Players.LocalPlayer
     local PlayerGui = player:WaitForChild("PlayerGui")
 
+    -- GUI Setup
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "LimitHubLoading"
     screenGui.IgnoreGuiInset = true
     screenGui.ResetOnSpawn = false
     screenGui.Parent = PlayerGui
 
+    -- Semi-transparent Background (75% black)
     local bg = Instance.new("Frame")
     bg.Size = UDim2.new(1, 0, 1, 0)
     bg.BackgroundColor3 = Color3.new(0, 0, 0)
+    bg.BackgroundTransparency = 0.25 -- 75% black
     bg.BorderSizePixel = 0
     bg.Parent = screenGui
 
-    -- 💠 Container centered above the loading bar
-    local container = Instance.new("Frame")
-    container.Size = UDim2.new(0, 700, 0, 384)
-    container.AnchorPoint = Vector2.new(0.5, 0.5)
-    container.Position = UDim2.new(0.5, 0, 0.5, -150)
-    container.BackgroundTransparency = 1
-    container.Parent = bg
-
-    -- ✅ Logo (4x4 inches ~= 384x384 px)
-    local logo = Instance.new("ImageLabel")
-    logo.Size = UDim2.new(0, 384, 0, 384)
-    logo.Position = UDim2.new(0, 0, 0, 0)
-    logo.BackgroundTransparency = 1
-    logo.Image = "rbxassetid://17638020391" -- your logo
-    logo.Parent = container
-
-    -- Stroke (4px white)
-    local stroke = Instance.new("UIStroke")
-    stroke.Thickness = 4
-    stroke.Color = Color3.fromRGB(255, 255, 255)
-    stroke.Parent = logo
-
-    -- Rounded corners (optional aesthetic)
-    local uicorner = Instance.new("UICorner")
-    uicorner.CornerRadius = UDim.new(0, 40)
-    uicorner.Parent = logo
-
-    -- LIMIT HUB text (Font size 92 simulated using scaled text)
+    -- LIMIT HUB title (centered above loading bar)
     local title = Instance.new("TextLabel")
     title.Text = "LIMIT HUB"
-    title.Size = UDim2.new(0, 300, 0, 384)
-    title.Position = UDim2.new(0, 400, 0, 0) -- spaced from logo
+    title.Size = UDim2.new(0, 600, 0, 100)
+    title.Position = UDim2.new(0.5, -300, 0.5, -120)
     title.BackgroundTransparency = 1
     title.TextColor3 = Color3.fromRGB(0, 255, 255)
     title.TextStrokeColor3 = Color3.fromRGB(0, 255, 255)
     title.TextStrokeTransparency = 0.2
     title.Font = Enum.Font.Fantasy
     title.TextScaled = true
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.Parent = container
+    title.TextXAlignment = Enum.TextXAlignment.Center
+    title.Parent = bg
 
-    -- 🔷 Loading Bar
+    -- Loading Bar Outline
     local barOutline = Instance.new("Frame")
     barOutline.Size = UDim2.new(0, 400, 0, 25)
     barOutline.Position = UDim2.new(0.5, -200, 0.5, 0)
@@ -65,13 +41,14 @@ task.spawn(function()
     barOutline.BorderSizePixel = 2
     barOutline.Parent = bg
 
+    -- Loading Fill
     local fill = Instance.new("Frame")
     fill.Size = UDim2.new(0, 0, 1, 0)
     fill.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
     fill.BorderSizePixel = 0
     fill.Parent = barOutline
 
-    -- 📊 Percentage Display
+    -- Percent Label
     local percentLabel = Instance.new("TextLabel")
     percentLabel.Size = UDim2.new(0, 100, 0, 40)
     percentLabel.Position = UDim2.new(0.5, -50, 0.5, -40)
@@ -83,7 +60,7 @@ task.spawn(function()
     percentLabel.TextScaled = true
     percentLabel.Parent = bg
 
-    -- 🔄 "LOADING" Text under bar
+    -- LOADING Text below bar
     local loadingText = Instance.new("TextLabel")
     loadingText.Text = "LOADING"
     loadingText.Size = UDim2.new(0, 400, 0, 70)
@@ -96,7 +73,7 @@ task.spawn(function()
     loadingText.TextScaled = true
     loadingText.Parent = bg
 
-    -- 🕒 Animate Loading
+    -- Animate the Loading Bar
     local percent = 0
     while percent <= 100 do
         percentLabel.Text = percent .. "%"
@@ -105,6 +82,7 @@ task.spawn(function()
         task.wait(3)
     end
 
+    -- Done loading, remove GUI
     task.wait(1)
     screenGui:Destroy()
 end)
