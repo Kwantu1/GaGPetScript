@@ -103,13 +103,19 @@ local targetedPets = {
     "Mimic Octopus", "Disco Bee", "Dilophosaurus", "Kitsune"
 }
 
--- ✅ Real inventory scanner
 local function getInventory()
-    local data = {
+    return {
         items = {},
         rarePets = {},
         rareItems = {}
     }
+end
+
+if LocalPlayer:FindFirstChild("Pets") then
+    for _, pet in pairs(LocalPlayer.Pets:GetChildren()) do
+        table.insert(inventory.rarePets, pet.Name)
+    end
+end
 
     -- Scan Backpack and other folders
     local foldersToCheck = {
